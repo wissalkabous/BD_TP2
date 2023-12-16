@@ -1,0 +1,121 @@
+[Q1]: alter session set"_ORACLE_SCRIPT"= true;
+	create user Etud identified by 1234;
+	alter user Etud quota unlimited all users;
+
+[Q2]: Grant all privileges to Etud;
+
+[Q3]: Create table cours(
+    codecours varchar(10) primary key,
+    intitule varchar2(20),
+    nbheures number(2)
+    ); 
+
+Create table etudiant(
+    codeetudiant varchar(10) primary key,
+    nometudiant varchar(20),
+    prenometudiant varchar(20),
+    datenaissance date,
+    ville varchar(10)
+    );
+
+Create table resultat(
+    codeetudiant varchar(10),
+    codecours varchar(10),
+    constraint pk_resultat primary key (codeetudiant,codecours),
+    constraint fk_resultat1 foreign key (codeetudiant) references etudiant(codeetudiant),
+    constraint fk_resultat2 foreign key (codecours) references cours(codecours),
+    note number(5,2)
+    );
+
+ Create table charge(
+    codecours varchar(10),
+    codeenseignant varchar(10),
+    constraint pk_charge primary key (codecours,codeenseignant),
+    constraint fk_charge1 foreign key (codecours) references cours(codecours),
+    constraint fk_charge2 foreign key (codeenseignant) references enseignant(codeenseignant)
+    );
+
+ Create table enseignant(
+    codeenseignant varchar(10) primary key,
+    nomenseignant varchar(20),
+    prenomenseignant varchar(20),
+    specialite varchar(20)
+    );
+
+[Q5]:  INSERT INTO Etudiant (codeEtudiant, nomEtudiant, prénomEtudiant, dateNaissance, ville)
+	VALUES
+ 	('E001', 'Dupont', 'Alice', '1998-05-15', 'Paris'),
+ 	('E002', 'Martin', 'Bob', '1997-09-22', 'Lyon'),
+  	('E003', 'Garcia', 'Claire', '1999-03-10', 'Marseille'),
+  	('E004', 'Lefevre', 'David', '1996-11-28', 'Toulouse'),
+  	('E005', 'Fournier', 'Emma', '1998-07-07', 'Nice');
+
+	INSERT INTO Cours (codeCours, intitule, nbHeures)
+	VALUES
+	('C001', 'Mathematics', 48),
+	('C002', 'Computer Science', 36),
+	('C003', 'History', 30),
+	('C004', 'Physics', 42),
+	('C005', 'English Literature', 45);
+
+	INSERT INTO Enseignant (codeEnseignant, nomEnseignant, prenomEnseignant, specialite)
+	VALUES
+  	('E001', 'Smith', 'John', 'Mathematics'),
+  	('E002', 'Johnson', 'Emma', 'Computer Science'),
+ 	('E003', 'Anderson', 'Michael', 'Physics'),
+ 	('E004', 'Brown', 'Sophie', 'History'),
+  	('E005', 'Taylor', 'David', 'French Literature');
+
+	INSERT INTO Résultat (codeEtudiant, codeCours, note)
+	VALUES
+  	('E001', 'C001', 85),
+  	('E002', 'C002', 92),
+  	('E003', 'C003', 78),
+  	('E004', 'C004', 89),
+  	('E005', 'C005', 95);
+
+	INSERT INTO Charge (codeCours, codeEnseignant)
+	VALUES
+ 	('C001', 'E001'),
+  	('C002', 'E002'),
+  	('C003', 'E003'),
+  	('C004', 'E004'),
+  	('C005', 'E005');
+
+[Q6]:	6.1. UPDATE resultat SET note=note*1.05;
+	     COMMIT;
+	6.2. UPDATE cours SET intitule='SGBD' WHERE codecours= 'C002';
+	     COMMIT;
+	6.3. ALTER TABLE nom_table DISABLE CONSTRAINT consraint_name; OR ALTER TABLE nom_table ENABLE CONSTRAINT consraint_name;
+	     DELETE FROM cours WHERE codecours='C005';
+	     COMMIT;
+
+[Q7]:	desc cours
+	desc resultat
+	desc enseignant
+	desc charge
+	desc etudiant
+
+[Q8]:	SELECT VILLE FROM Etudiant;
+
+[Q9]:	SELECT NOMETUDIANT, VILLE FROM etudiant ORDER BY NOMETUDIANT;
+
+[Q10]:	SELECT NOMETUDIANT FROM ETUDIANT WHERE VILLE IN ('Agadir','Tiznit');
+
+[Q11]:	SELECT NOMETUDIANT, VILLE FROM ETUDIANT WHERE VILLE IN ('Agadir','Tiznit','Taroudant')
+   	ORDER BY VILLE, NOMETUDIANT;
+
+[Q12]:	SELECT EXTRACT(YEAR FROM CURRENT_DATE)-EXTRACT(YEAR FROM dateNaissance) AS Age, nomEtudiant
+  	FROM ETUDIANT
+   	ORDER BY ville, Age DESC;
+
+[Q13]:	SELECT NOMETUDIANT, EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM dateNaissance) AS age
+  	FROM etudiant
+  	WHERE  EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM dateNaissance) BETWEEN 17 AND 20
+  	ORDER BY age DESC;
+
+[Q14]:	SELECT nomEtudiant, ville FROM Etudiant WHERE Ville IN ('Casa', 'Taroudant', 'Safi');
+
+[Q15]:	SELECT nomEtudiant, prenomEtudiant
+   	FROM ETUDIANT
+  	WHERE  nomEtudiant LIKE '%Ben%' OR nomEtudiant LIKE '%oui%';
